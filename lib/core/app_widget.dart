@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:crud_firebase/modules/splash/splash_page.dart';
+import 'package:crud_firebase/shared/constants/consts.dart';
+import 'package:flutter/material.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -8,7 +8,7 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ignite Flutter | Firebase\'s CRUD Challenge',
+      title: AppConsts.appWidgetTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.purple,

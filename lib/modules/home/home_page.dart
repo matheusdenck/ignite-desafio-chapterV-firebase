@@ -1,13 +1,12 @@
+import 'package:crud_firebase/shared/constants/consts.dart';
+import 'package:crud_firebase/shared/data/models/todo_item.dart';
+import 'package:crud_firebase/shared/widgets/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import 'package:uuid/uuid.dart';
 
 import 'store/home_page_store.dart';
 import 'widget/task_input_field.dart';
-
-import 'package:crud_firebase/shared/data/models/todo_item.dart';
-import 'package:crud_firebase/shared/widgets/themes/app_text_styles.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,8 +26,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   String undoneTaskQuantityMessage(int listLength) {
-    final messageBodyPluralConcordance = listLength > 1 ? 'tarefas' : 'tarefa';
-    final messageBody = listLength != 0 ? listLength.toString() : 'nenhuma';
+    final messageBodyPluralConcordance = listLength > 1 ? AppConsts.tasks : AppConsts.task;
+    final messageBody = listLength != 0 ? listLength.toString() : AppConsts.none;
 
     return '$messageBody $messageBodyPluralConcordance';
   }
@@ -48,42 +47,44 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Observer(
-                  builder: (_) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          height: 20,
-                        ),
-                      ),
-                      Flexible(
-                        child: Text.rich(
-                          TextSpan(
-                            text: 'Você tem ',
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                  builder: (_) => _store.toDoListStream.value == null
+                      ? const CircularProgressIndicator()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Image.asset(
+                                AppConsts.homePageLogoAssetPath,
+                                height: 20,
+                              ),
                             ),
-                            children: [
-                              TextSpan(
-                                text: undoneTaskQuantityMessage(
-                                  _store.undoneTaskListLength,
-                                ),
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                            Flexible(
+                              child: Text.rich(
+                                TextSpan(
+                                  text: AppConsts.youHave,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: undoneTaskQuantityMessage(
+                                        _store.undoneTaskListLength,
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ),
                 TaskInputField(
                   controller: _toDoItemTitleEditingController,
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
           builder: (_) => ToDoItemListView(
             itemList: _store.itemList,
             onDeleteItem: _store.deleteItem,
-            toogleItemState: _store.toogleItemState,
+            toogleItemState: _store.toggleItemState,
           ),
         ),
       ),
@@ -153,16 +154,14 @@ class ToDoItemListView extends StatelessWidget {
             controlAffinity: ListTileControlAffinity.leading,
             title: Text(
               item.title,
-              style: item.state == true
-                  ? AppTextStyles.doneItemTextStyle
-                  : AppTextStyles.undoneItemTextStyle,
+              style: item.state == true ? AppTextStyles.doneItemTextStyle : AppTextStyles.undoneItemTextStyle,
             ),
             secondary: SizedBox(
               width: 80,
               child: GestureDetector(
                 onTap: () => onDeleteItem(item),
                 child: Image.asset(
-                  'assets/images/delete.png',
+                  AppConsts.homePageDeleteAssetPath,
                   height: 24,
                 ),
               ),

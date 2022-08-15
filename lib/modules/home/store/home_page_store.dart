@@ -1,21 +1,20 @@
 import 'package:crud_firebase/shared/data/data_source/todo_remote_data_source.dart';
+import 'package:crud_firebase/shared/data/models/todo_item.dart';
 import 'package:crud_firebase/shared/data/todo_data_source_interface.dart';
 import 'package:mobx/mobx.dart';
-
-import 'package:crud_firebase/shared/data/models/todo_item.dart';
 
 part 'home_page_store.g.dart';
 
 class HomePageStore = _HomePageStore with _$HomePageStore;
 
 abstract class _HomePageStore with Store {
-  static final ToDoDataSourceInterface _toDoRemoteDS = ToDoLocalDataSource();
+  static final ToDoDataSourceInterface _toDoRemoteDS = ToDoRemoteDataSource();
 
   @observable
-  var toDoListStream = _toDoRemoteDS.fetchToDoListStream().asObservable();
+  ObservableStream<List<ToDoItem>?> toDoListStream = _toDoRemoteDS.fetchToDoListStream().asObservable();
 
-  Future<void> toogleItemState(ToDoItem oldItem) async {
-    await _toDoRemoteDS.onToogleToDoItemState(oldItem.id, !oldItem.state);
+  Future<void> toggleItemState(ToDoItem oldItem) async {
+    await _toDoRemoteDS.onToggleToDoItemState(oldItem.id, !oldItem.state);
   }
 
   Future<void> addItem(ToDoItem item) async {
@@ -28,13 +27,11 @@ abstract class _HomePageStore with Store {
 
   @computed
   List<ToDoItem> get itemList {
-    final sortedItemList = toDoListStream.value
-      ?..sort((a, b) => a.state ? 1 : -1);
+    final sortedItemList = toDoListStream.value?..sort((a, b) => a.state ? 1 : -1);
 
     return sortedItemList ?? <ToDoItem>[];
   }
 
   @computed
-  int get undoneTaskListLength =>
-      itemList.where((item) => item.state == false).length;
+  int get undoneTaskListLength => itemList.where((item) => item.state == false).length;
 }

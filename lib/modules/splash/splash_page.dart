@@ -1,8 +1,8 @@
+import 'package:crud_firebase/modules/home/home_page.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:crud_firebase/modules/home/home_page.dart';
+import '../../shared/constants/consts.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         await Future.delayed(
           const Duration(seconds: 2),
@@ -46,12 +46,12 @@ class _SplashPageState extends State<SplashPage> {
               alignment: Alignment.center,
               height: 44,
               width: 160,
-              child: Image.asset('assets/images/logo.png'),
+              child: Image.asset(AppConsts.homePageLogoAssetPath),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40),
               child: Text(
-                'Seu aplicativo favorito de afarezes',
+                AppConsts.yourFavoriteToDoApp,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 18,

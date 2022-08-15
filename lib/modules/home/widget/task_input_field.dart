@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../shared/constants/consts.dart';
 
 class TaskInputField extends StatelessWidget {
   const TaskInputField({
@@ -35,7 +36,7 @@ class TaskInputField extends StatelessWidget {
             floatingLabelBehavior: FloatingLabelBehavior.never,
             isCollapsed: true,
             contentPadding: EdgeInsets.zero,
-            labelText: 'Adicione uma tarefa',
+            labelText: AppConsts.addATask,
             labelStyle: GoogleFonts.inter(
               fontSize: 14,
               color: const Color(0xFFB2B2B2),
